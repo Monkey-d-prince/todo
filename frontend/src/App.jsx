@@ -30,10 +30,30 @@ function App() {
     fetchTodos();
   }, []);
 
+  const handleMarkCompleted = async (id) => {
+    try {
+      const response = await fetch('http://localhost:3000/completed', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id })
+      });
+      if (response.ok) {
+        setTodos(todos =>
+          todos.map(todo =>
+            todo._id === id ? { ...todo, completed: true } : todo
+          )
+        );
+      }
+    } catch (error) {
+      console.error('Error updating todo:', error);
+    }
+  };
+
+
   return (
     <div>
       <CreateTodo />
-      <Todos todos={todos} />
+      <Todos todos={todos} onMarkCompleted={handleMarkCompleted}/>
     </div>
   )
 }

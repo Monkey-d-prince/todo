@@ -1,4 +1,5 @@
-export function Todos({todos}) {
+
+export function Todos({ todos, onMarkCompleted }) {
     return (
         <div style={{
             maxWidth: "600px",
@@ -21,6 +22,11 @@ export function Todos({todos}) {
                     <h3>{todo.title}</h3>
                     <p>{todo.description}</p>
                     <p>Status: {todo.completed ? "Completed" : "Pending"}</p>
+                    {!todo.completed && (
+                        <button onClick={() => onMarkCompleted(todo._id)}>
+                            Mark as Completed
+                        </button>
+                    )}
                 </div>
             ))}
         </div>
