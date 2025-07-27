@@ -4,8 +4,13 @@ const { createTodoSchema, updateTodoSchema } = require('./types');
 const mongodb = require('mongodb');
 const { todo } = require('./db');
 require('dotenv').config();
+const cors = require('cors');
 
 app.use(express.json());
+app.use(cors({
+    origin: 'http://localhost:5173'
+}));
+
 
 // const clint = new mongodb.MongoClient(process.env.MONGODB_URL, {
 //     useNewUrlParser: true,
@@ -72,11 +77,10 @@ app.put('/completed', async(req, res) => {
         });
         return;
     }
-    await todo.update({
-        _id:req.body.id
-    },{
-        completed: true
-    })
+    await todo.updateOne(
+    { _id: req.body.id },
+    { $set: { completed: true } }
+);
 
     res.status(200).json({
         msg: 'Todo updated successfully',

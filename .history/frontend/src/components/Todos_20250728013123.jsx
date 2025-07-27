@@ -24,7 +24,7 @@ export function Todos({ todos, onMarkCompleted }) {
                     <p>Status: {todo.completed ? "Completed" : "Pending"}</p>
                     {!todo.completed && (
                         <button onClick={() => onMarkCompleted(todo._id)}>
-                            Mark as Completed.
+                            Mark as Completed
                         </button>
                     )}
                 </div>
