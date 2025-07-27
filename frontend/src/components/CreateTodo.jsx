@@ -1,6 +1,11 @@
 import React from 'react'
 
 const CreateTodo = () => {
+
+    const [title, setTitle] = React.useState('');
+    const [description, setDescription] = React.useState('');
+    const [completed, setCompleted] = React.useState(false);
+
     return (
         <div style={{
             maxWidth: "400px",
@@ -21,6 +26,8 @@ const CreateTodo = () => {
                 }}
                 type="text"
                 placeholder="Title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
             /><br/>
             <input
                 style={{
@@ -32,9 +39,16 @@ const CreateTodo = () => {
                 }}
                 type="text"
                 placeholder="Description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
             /><br/>
             <label style={{ display: "flex", alignItems: "center", marginBottom: "16px" }}>
-                <input type="checkbox" style={{ marginRight: "8px" }} /> Completed
+                <input
+                    type="checkbox"
+                    style={{ marginRight: "8px" }}
+                    checked={completed}
+                    onChange={(e) => setCompleted(e.target.checked)}
+                /> Completed
             </label>
             <button
                 type="submit"
@@ -47,6 +61,33 @@ const CreateTodo = () => {
                     borderRadius: "4px",
                     fontWeight: "bold",
                     cursor: "pointer"
+                }}
+
+                onClick={() => {
+                    fetch('http://localhost:3000/todo', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            title: title,
+                            description: description,
+                            completed: completed
+                        }),
+                    }).then(async (res) => {
+                        const data = await res.json();
+                        if (res.status === 201) {
+                            console.log('Todo created successfully:', data);
+                            alert('Todo created successfully');
+                            setTitle('');
+                            setDescription('');
+                            setCompleted(false);
+                        } else {
+                            console.error('Error creating todo:', data);
+                        }
+                    }).catch((error) => {
+                        console.error('Error:', error);
+                    });
                 }}
             >
                 Add Todo
